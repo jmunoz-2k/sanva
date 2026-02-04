@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuestro calendario 💘</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="fondo-corazones" id="fondo"></div>
+
+<div class="container">
+    <h1>📅 Nuestro calendario 💘</h1>
+
+    <div class="calendario">
+        <div class="mes">
+            <h2>Enero</h2>
+            <table>
+                <tr>
+                    <th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th>
+                </tr>
+                <tbody id="enero"></tbody>
+            </table>
+        </div>
+
+        <div class="mes">
+            <h2>Febrero</h2>
+            <table>
+                <tr>
+                    <th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th>
+                </tr>
+                <tbody id="febrero"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="leyenda">
+        <h2>💞 Significado de los corazones</h2>
+        <p><span style="color:#ffd700;">❤</span> Amarillo: Primer “te amo”</p>
+        <p><span style="color:#ff0000;">❤</span> Rojo: Primera vez que nos vimos</p>
+        <p><span style="color:#8000ff;">❤</span> Morado: Veces que nos hemos visto</p>
+        <p><span style="color:#0066ff;">❤</span> Azul: Primera vez que hablamos</p>
+        <p style="font-size:0.9em;">🖱 Click: nota · Click derecho: 💜</p>
+    </div>
+</div>
+
+<!-- Popup notas -->
+<div id="popupNota" class="popup-overlay">
+    <div class="popup-contenido">
+        <h2>💌 Nota para este día</h2>
+        <textarea id="textoNota" placeholder="Escribe tu nota aquí..."></textarea>
+        <div class="popup-botones">
+            <button id="guardarNota">Guardar</button>
+            <button id="cerrarPopup">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
