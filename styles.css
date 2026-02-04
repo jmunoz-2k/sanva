@@ -156,3 +156,13 @@ td {
     from { transform: translateY(110vh); }
     to { transform: translateY(-10vh); }
 }
+.login-btn {
+    padding: 10px 18px;
+    margin: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #8000ff;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+}

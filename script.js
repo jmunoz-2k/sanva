@@ -1,3 +1,54 @@
+/* ===== Firebase ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCrbTzyqh7AbCCJdNJwxzhZ-U8js2_2suA",
+  authDomain: "sanva-jm.firebaseapp.com",
+  projectId: "sanva-jm",
+  storageBucket: "sanva-jm.firebasestorage.app",
+  messagingSenderId: "44847411302",
+  appId: "1:44847411302:web:3356d2251f2ced82f1fda7",
+  measurementId: "G-K0QNNC2257"
+};
+const USUARIOS_PERMITIDOS = [
+  "jmmunoz2k@gmail.com",
+  "josemanu15cat@gmail.com"
+];
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const btnLogin = document.getElementById("loginGoogle");
+const btnLogout = document.getElementById("logout");
+
+btnLogin.onclick = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+};
+
+btnLogout.onclick = () => auth.signOut();
+
+auth.onAuthStateChanged(user => {
+    if (!user) {
+        btnLogin.style.display = "inline-block";
+        btnLogout.style.display = "none";
+        document.querySelector(".calendario").style.display = "none";
+        return;
+    }
+
+    if (!USUARIOS_PERMITIDOS.includes(user.email)) {
+        alert("No tienes acceso 💔");
+        auth.signOut();
+        return;
+    }
+
+    btnLogin.style.display = "none";
+    btnLogout.style.display = "inline-block";
+    document.querySelector(".calendario").style.display = "flex";
+
+    console.log("Sesión iniciada:", user.email);
+});
+
+
 const fondo = document.getElementById("fondo");
 
 /* ===== Corazones SVG flotantes ===== */
