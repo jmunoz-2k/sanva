@@ -166,3 +166,6 @@ td {
     font-size: 1em;
     cursor: pointer;
 }
+.login-btn {
+    margin-top: 40px;
+}

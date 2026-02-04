@@ -31,11 +31,13 @@ btnLogin.onclick = () => {
 
 btnLogout.onclick = () => auth.signOut();
 
+const app = document.getElementById("app");
+
 auth.onAuthStateChanged(user => {
     if (!user) {
         btnLogin.style.display = "inline-block";
         btnLogout.style.display = "none";
-        document.querySelector(".calendario").style.display = "none";
+        app.style.display = "none";
         return;
     }
 
@@ -47,9 +49,9 @@ auth.onAuthStateChanged(user => {
 
     btnLogin.style.display = "none";
     btnLogout.style.display = "inline-block";
-    document.querySelector(".calendario").style.display = "flex";
+    app.style.display = "block";
 
-    console.log("Sesión iniciada:", user.email);
+    generarCalendarios();
 });
 
 
