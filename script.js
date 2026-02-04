@@ -34,10 +34,13 @@ btnLogout.onclick = () => auth.signOut();
 const app = document.getElementById("app");
 
 auth.onAuthStateChanged(user => {
+    const leyenda = document.getElementById("leyenda"); // obtenemos la leyenda
+
     if (!user) {
         btnLogin.style.display = "inline-block";
         btnLogout.style.display = "none";
         app.style.display = "none";
+        if (leyenda) leyenda.style.display = "none"; // ocultamos leyenda
         return;
     }
 
@@ -50,10 +53,9 @@ auth.onAuthStateChanged(user => {
     btnLogin.style.display = "none";
     btnLogout.style.display = "inline-block";
     app.style.display = "block";
+    if (leyenda) leyenda.style.display = "block"; // mostramos leyenda
 
-    generarCalendarios();
 });
-
 
 const fondo = document.getElementById("fondo");
 
