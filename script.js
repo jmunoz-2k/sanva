@@ -17,6 +17,10 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+function getDiaRef(mes, dia) {
+    return db.collection("calendario").doc(`${mes}_${dia}`);
+}
+
 const btnLogin = document.getElementById("loginGoogle");
 const btnLogout = document.getElementById("logout");
 
@@ -115,26 +119,53 @@ const btnGuardar = document.getElementById("guardarNota");
 const btnCerrar = document.getElementById("cerrarPopup");
 let diaActual = null;
 
-function abrirPopup(mes, dia) {
+async function abrirPopup(mes, dia) {
     diaActual = { mes, dia };
-    textoNota.value = localStorage.getItem(`${mes}_dia_${dia}`) || "";
+
+    const ref = getDiaRef(mes, dia);
+    const doc = await ref.get();
+
+    textoNota.value = doc.exists && doc.data().nota
+        ? doc.data().nota
+        : "";
+
     popup.style.display = "flex";
 }
 
 btnCerrar.onclick = () => popup.style.display = "none";
 
-btnGuardar.onclick = () => {
-    const clave = `${diaActual.mes}_dia_${diaActual.dia}`;
+btnGuardar.onclick = async () => {
+    const ref = getDiaRef(diaActual.mes, diaActual.dia);
     const texto = textoNota.value.trim();
-    if (texto === "") localStorage.removeItem(clave);
-    else localStorage.setItem(clave, texto);
+
+    if (texto === "") {
+        await ref.set({ nota: firebase.firestore.FieldValue.delete() }, { merge: true });
+    } else {
+        await ref.set({ nota: texto }, { merge: true });
+    }
+
     popup.style.display = "none";
     generarCalendarios();
 };
 
 /* ===== Corazón morado dinámico ===== */
-function tieneCorazonMorado(mes, dia) {
-    return localStorage.getItem(`${mes}_corazon_${dia}`) === "true";
+async function tieneCorazonMorado(mes, dia) {
+    const doc = await getDiaRef(mes, dia).get();
+    return doc.exists && doc.data().corazonMorado === true;
+}
+
+async function toggleCorazonMorado(mes, dia) {
+    const ref = getDiaRef(mes, dia);
+    const doc = await ref.get();
+
+    const activo = doc.exists && doc.data().corazonMorado === true;
+
+    await ref.set(
+        { corazonMorado: !activo },
+        { merge: true }
+    );
+
+    generarCalendarios();
 }
 
 function toggleCorazonMorado(mes, dia) {
@@ -145,21 +176,24 @@ function toggleCorazonMorado(mes, dia) {
 }
 
 /* ===== Calendario ===== */
-function generarCalendario(id, diasMes, primerDia, diasEspeciales = {}) {
+async function generarCalendario(id, diasMes, primerDia, diasEspeciales = {}) {
     const tbody = document.getElementById(id);
     let html = "<tr>";
 
     for (let i = 0; i < primerDia; i++) html += "<td></td>";
 
     for (let dia = 1; dia <= diasMes; dia++) {
-        const nota = localStorage.getItem(`${id}_dia_${dia}`);
+        const doc = await getDiaRef(id, dia).get();
+        const data = doc.exists ? doc.data() : {};
+
+        const nota = data.nota;
+        const corazonMorado = data.corazonMorado;
         const colorEspecial = diasEspeciales[dia];
-        const corazonMorado = tieneCorazonMorado(id, dia);
 
         let contenido = `
         <div class="dia"
-             onclick="abrirPopup('${id}', ${dia})"
-             oncontextmenu="event.preventDefault(); toggleCorazonMorado('${id}', ${dia});">
+            onclick="abrirPopup('${id}', ${dia})"
+            oncontextmenu="event.preventDefault(); toggleCorazonMorado('${id}', ${dia});">
         `;
 
         if (colorEspecial) {
@@ -185,9 +219,10 @@ function generarCalendario(id, diasMes, primerDia, diasEspeciales = {}) {
     tbody.innerHTML = html;
 }
 
-function generarCalendarios() {
-    generarCalendario("enero", 31, 3, diasEneroEspeciales);
-    generarCalendario("febrero", 28, 6);
+
+async function generarCalendarios() {
+    await generarCalendario("enero", 31, 3, diasEneroEspeciales);
+    await generarCalendario("febrero", 28, 6);
 }
 
 generarCalendarios();
