@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	const USUARIOS_PERMITIDOS = [
-	  "jmmunoz2k@gmail.com",
+	  "anaperu2003@gmail.com",
 	  "josemanu15cat@gmail.com"
 	];
 
