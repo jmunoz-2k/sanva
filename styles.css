@@ -28,11 +28,13 @@ h1 {
     color: #ff2f6d;
 }
 
-/* Calendario */
+/* calendario */
 .calendario {
-    display: flex;
-    gap: 40px;
-    margin-top: 20px;
+    display: flex;           /* Para que los meses se comporten como cajas flexibles */
+    flex-wrap: wrap;         /* Permite que los meses se muevan a la siguiente línea si no caben */
+    justify-content: center; /* Centra los meses horizontalmente */
+    gap: 20px;               /* Espacio entre meses */
+    margin: 20px 0;          /* Margen superior e inferior */
 }
 
 table {
@@ -188,10 +190,6 @@ td {
     cursor: pointer;
 }
 
-.mes {
-    display: none;
-}
-
 .check-corazon {
     display: block;
     margin: 10px 0;
@@ -202,6 +200,14 @@ td {
 .mes {
     display: none;
     animation: fadeSlide 0.35s ease;
+}
+.mes {
+    text-align: center;      /* Centra el título y la tabla */
+}
+
+.mes table {
+    margin: 0 auto;          /* Centra la tabla dentro del div del mes */
+    border-collapse: collapse;
 }
 
 @keyframes fadeSlide {
@@ -214,3 +220,4 @@ td {
         transform: translateX(0);
     }
 }
+
