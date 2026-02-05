@@ -194,7 +194,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		checkVisto.checked = data.corazonMorado === true;
 		popup.style.display = "flex";
 	}
-
+	
+	window.abrirPopup = abrirPopup;
+	
 	document.getElementById("cerrarPopup").onclick = () => popup.style.display = "none";
 
 	document.getElementById("guardarNota").onclick = async () => {
