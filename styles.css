@@ -207,7 +207,6 @@ td {
 
 .mes table {
     margin: 0 auto;          /* Centra la tabla dentro del div del mes */
-    border-collapse: collapse;
 }
 .mes table {
     margin: 0 auto;           /* ya lo teníamos para centrar */
