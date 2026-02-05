@@ -8,9 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	  messagingSenderId: "44847411302",
 	  appId: "1:44847411302:web:3356d2251f2ced82f1fda7"
 	};
-	/* ===== Imágenes flotantes PNG ===== */
-	const imgSources = ["GR.png", "bunny.png", "suki.png"]; // añade aquí todas las imágenes
-	const maxImgs = 2; // cantidad total de imágenes por cada tipo
 
 	const USUARIOS_PERMITIDOS = [
 	  "jmmunoz2k@gmail.com",
@@ -43,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		{ id:"diciembre", nombre:"Diciembre", dias:31, primerDia:1, especiales:{} }
 	];
 
-
 	let mesIndex = 0;
 
 	/* ===== Login ===== */
@@ -51,57 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnLogout = document.getElementById("logout");
 	const app = document.getElementById("app");
 	const leyenda = document.getElementById("leyenda");
-
-	/* ===== Fondo de corazones flotantes ===== */
-	const fondo = document.getElementById("fondo");
-
-	if (fondo) {
-		for (let i = 0; i < 25; i++) {
-			const svgNS = "http://www.w3.org/2000/svg";
-			const heart = document.createElementNS(svgNS, "svg");
-			heart.setAttribute("viewBox", "0 0 32 29.6");
-			heart.classList.add("corazon");
-
-			const size = Math.random() * 20 + 25;
-			heart.style.width = size + "px";
-			heart.style.height = size + "px";
-			heart.style.left = Math.random() * window.innerWidth + "px";
-			heart.style.animationDuration = (Math.random() * 10 + 10) + "s";
-
-			const path = document.createElementNS(svgNS, "path");
-			path.setAttribute(
-				"d",
-				"M23.6,0C20.4,0,17.7,1.8,16,4.4C14.3,1.8,11.6,0,8.4,0C3.7,0,0,3.7,0,8.4C0,14.6,16,29.6,16,29.6S32,14.6,32,8.4C32,3.7,28.3,0,23.6,0Z"
-			);
-			path.setAttribute("fill", "#ff5f8a");
-
-			heart.appendChild(path);
-			fondo.appendChild(heart);
-		}
-	}
-	/* ===== Imágenes flotantes ===== */
-	const imgSources = ["GR.png", "bunny.png", "suki.png"];
-	const maxImgs = 2;
-
-	imgSources.forEach(src => {
-		for (let i = 0; i < maxImgs; i++) {
-			const img = document.createElement("img");
-			img.src = src;
-			img.classList.add("floating-img");
-
-			img.style.left = Math.random() * window.innerWidth + "px";
-			img.style.top = Math.random() * window.innerHeight + "px";
-
-			const size = Math.random() * 30 + 40;
-			img.style.width = size + "px";
-
-			img.style.animationDuration = (Math.random() * 5 + 8) + "s";
-			img.style.animationDelay = (Math.random() * 5) + "s";
-
-			fondo.appendChild(img);
-		}
-	});
-
 
 	btnLogin.onclick = () => {
 		const provider = new firebase.auth.GoogleAuthProvider();
@@ -133,6 +78,54 @@ document.addEventListener("DOMContentLoaded", () => {
 		await mostrarMes();
 	});
 
+	/* ===== Fondo de corazones flotantes ===== */
+	const fondo = document.getElementById("fondo");
+
+	if (fondo) {
+		for (let i = 0; i < 25; i++) {
+			const svgNS = "http://www.w3.org/2000/svg";
+			const heart = document.createElementNS(svgNS, "svg");
+			heart.setAttribute("viewBox", "0 0 32 29.6");
+			heart.classList.add("corazon");
+
+			const size = Math.random() * 20 + 25;
+			heart.style.width = size + "px";
+			heart.style.height = size + "px";
+			heart.style.left = Math.random() * window.innerWidth + "px";
+			heart.style.animationDuration = (Math.random() * 10 + 10) + "s";
+
+			const path = document.createElementNS(svgNS, "path");
+			path.setAttribute(
+				"d",
+				"M23.6,0C20.4,0,17.7,1.8,16,4.4C14.3,1.8,11.6,0,8.4,0C3.7,0,0,3.7,0,8.4C0,14.6,16,29.6,16,29.6S32,14.6,32,8.4C32,3.7,28.3,0,23.6,0Z"
+			);
+			path.setAttribute("fill", "#ff5f8a");
+
+			heart.appendChild(path);
+			fondo.appendChild(heart);
+		}
+	}
+
+	/* ===== Imágenes flotantes ===== */
+	const imgSources = ["GR.png", "bunny.png", "suki.png"];
+	const maxImgs = 2;
+
+	imgSources.forEach(src => {
+		for (let i = 0; i < maxImgs; i++) {
+			const img = document.createElement("img");
+			img.src = src;
+			img.classList.add("floating-img");
+
+			img.style.left = Math.random() * window.innerWidth + "px";
+			img.style.top = Math.random() * window.innerHeight + "px";
+			img.style.width = (Math.random() * 30 + 40) + "px";
+			img.style.animationDuration = (Math.random() * 5 + 8) + "s";
+			img.style.animationDelay = (Math.random() * 5) + "s";
+
+			fondo.appendChild(img);
+		}
+	});
+
 	/* ===== Calendario ===== */
 	async function generarCalendario(mes) {
 		const tbody = document.getElementById(mes.id);
@@ -160,16 +153,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	async function mostrarMes() {
-		document.querySelectorAll(".mes").forEach(m => {
-			m.style.display = "none";
-		});
+		document.querySelectorAll(".mes").forEach(m => m.style.display = "none");
 
 		const mes = meses[mesIndex];
 		const contenedor = document.querySelector(`[data-mes="${mes.id}"]`);
 
 		contenedor.style.display = "block";
 		contenedor.style.animation = "none";
-		contenedor.offsetHeight; // 👈 fuerza repaint
+		contenedor.offsetHeight;
 		contenedor.style.animation = "fadeSlide 0.35s ease";
 
 		document.getElementById("mesActual").textContent = mes.nombre;
