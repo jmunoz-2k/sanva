@@ -33,6 +33,7 @@ h1 {
     display: flex;
     gap: 40px;
     margin-top: 20px;
+	justify-content: center; /* centra el mes visible */
 }
 
 table {
