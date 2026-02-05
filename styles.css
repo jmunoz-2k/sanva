@@ -209,6 +209,20 @@ td {
     margin: 0 auto;          /* Centra la tabla dentro del div del mes */
     border-collapse: collapse;
 }
+.mes table {
+    margin: 0 auto;           /* ya lo teníamos para centrar */
+    border-collapse: separate; /* IMPORTANTE: permite bordes redondeados */
+    border-spacing: 5px;       /* separa las celdas para que se vea el borde */
+    border-radius: 10px;       /* redondea las esquinas de la tabla */
+    overflow: hidden;          /* recorta los bordes internos */
+}
+
+.mes td, .mes th {
+    border: 1px solid #ccc;   /* bordes de las celdas */
+    border-radius: 10px;      /* redondea las esquinas de cada celda */
+    padding: 8px;
+    text-align: center;
+}
 
 @keyframes fadeSlide {
     from {
