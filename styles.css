@@ -28,13 +28,11 @@ h1 {
     color: #ff2f6d;
 }
 
-/* calendario */
+/* Calendario */
 .calendario {
-    display: flex;           /* Para que los meses se comporten como cajas flexibles */
-    flex-wrap: wrap;         /* Permite que los meses se muevan a la siguiente línea si no caben */
-    justify-content: center; /* Centra los meses horizontalmente */
-    gap: 20px;               /* Espacio entre meses */
-    margin: 20px 0;          /* Margen superior e inferior */
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
 }
 
 table {
@@ -190,47 +188,13 @@ td {
     cursor: pointer;
 }
 
+.mes {
+    display: none;
+}
+
 .check-corazon {
     display: block;
     margin: 10px 0;
     color: #8000ff;
     font-weight: bold;
 }
-
-.mes {
-    display: none;
-    animation: fadeSlide 0.35s ease;
-}
-.mes {
-    text-align: center;      /* Centra el título y la tabla */
-}
-
-.mes table {
-    margin: 0 auto;          /* Centra la tabla dentro del div del mes */
-}
-.mes table {
-    margin: 0 auto;           /* ya lo teníamos para centrar */
-    border-collapse: separate; /* IMPORTANTE: permite bordes redondeados */
-    border-spacing: 5px;       /* separa las celdas para que se vea el borde */
-    border-radius: 10px;       /* redondea las esquinas de la tabla */
-    overflow: hidden;          /* recorta los bordes internos */
-}
-
-.mes td, .mes th {
-    border: 1px solid #ccc;   /* bordes de las celdas */
-    border-radius: 10px;      /* redondea las esquinas de cada celda */
-    padding: 8px;
-    text-align: center;
-}
-
-@keyframes fadeSlide {
-    from {
-        opacity: 0;
-        transform: translateX(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
