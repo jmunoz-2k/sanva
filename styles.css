@@ -198,3 +198,19 @@ td {
     color: #8000ff;
     font-weight: bold;
 }
+
+.mes {
+    display: none;
+    animation: fadeSlide 0.35s ease;
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateX(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
