@@ -11,59 +11,76 @@
 
 <div class="container">
     <h1>📅 Nuestro calendario 💘</h1>
-		<button id="loginGoogle" class="login-btn">
-			Entrar con Google 💜
-		</button>
 
-		<button id="logout" class="login-btn" style="display:none">
-			Cerrar sesión
-		</button>
-	<div id="app" style="display:none">
-		<div class="calendario">
-			<div class="mes">
-				<h2>Enero</h2>
-				<table>
-					<tr>
-						<th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th>
-					</tr>
-					<tbody id="enero"></tbody>
-				</table>
-			</div>
+    <button id="loginGoogle" class="login-btn">
+        Entrar con Google 💜
+    </button>
 
-			<div class="mes">
-				<h2>Febrero</h2>
-				<table>
-					<tr>
-						<th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th>
-					</tr>
-					<tbody id="febrero"></tbody>
-				</table>
-			</div>
-		</div>
+    <button id="logout" class="login-btn" style="display:none">
+        Cerrar sesión
+    </button>
 
-		<div class="leyenda" id="leyenda" style="display:none">
-			<h2>💞 Significado de los corazones</h2>
-			<p><span style="color:#ffd700;">❤</span> Amarillo: Primer “te amo”</p>
-			<p><span style="color:#ff0000;">❤</span> Rojo: Primera vez que nos vimos</p>
-			<p><span style="color:#8000ff;">❤</span> Morado: Veces que nos hemos visto</p>
-			<p><span style="color:#0066ff;">❤</span> Azul: Primera vez que hablamos</p>
-			<p style="font-size:0.9em;">🖱 Click: nota · Click derecho: 💜</p>
-		</div>
-	</div>
+    <div id="app" style="display:none">
+
+        <!-- Paginación -->
+        <div class="paginacion">
+            <button id="prevMes">◀</button>
+            <span id="mesActual"></span>
+            <button id="nextMes">▶</button>
+        </div>
+
+        <div class="calendario">
+            <div class="mes" data-mes="enero">
+                <h2>Enero</h2>
+                <table>
+                    <tr>
+                        <th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th>
+                    </tr>
+                    <tbody id="enero"></tbody>
+                </table>
+            </div>
+
+            <div class="mes" data-mes="febrero">
+                <h2>Febrero</h2>
+                <table>
+                    <tr>
+                        <th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th>
+                    </tr>
+                    <tbody id="febrero"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="leyenda" id="leyenda" style="display:none">
+            <h2>💞 Significado de los corazones</h2>
+            <p><span style="color:#ffd700;">❤</span> Amarillo: Primer “te amo”</p>
+            <p><span style="color:#ff0000;">❤</span> Rojo: Primera vez que nos vimos</p>
+            <p><span style="color:#8000ff;">❤</span> Morado: Veces que nos hemos visto</p>
+            <p><span style="color:#0066ff;">❤</span> Azul: Primera vez que hablamos</p>
+            <p style="font-size:0.9em;">🖱 Click: nota</p>
+        </div>
+    </div>
 </div>
 
-<!-- Popup notas -->
+<!-- Popup -->
 <div id="popupNota" class="popup-overlay">
     <div class="popup-contenido">
         <h2>💌 Nota para este día</h2>
-        <textarea id="textoNota" placeholder="Escribe tu nota aquí..."></textarea>
+        <textarea id="textoNota"></textarea>
+
+        <label class="check-corazon">
+            <input type="checkbox" id="checkVisto">
+            💜 Ese día nos vimos
+        </label>
+
         <div class="popup-botones">
             <button id="guardarNota">Guardar</button>
             <button id="cerrarPopup">Cerrar</button>
         </div>
     </div>
 </div>
-<!-- Firebase SDK -->
+
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>

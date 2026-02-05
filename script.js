@@ -5,15 +5,18 @@ const firebaseConfig = {
   projectId: "sanva-jm",
   storageBucket: "sanva-jm.firebasestorage.app",
   messagingSenderId: "44847411302",
-  appId: "1:44847411302:web:3356d2251f2ced82f1fda7",
-  measurementId: "G-K0QNNC2257"
+  appId: "1:44847411302:web:3356d2251f2ced82f1fda7"
 };
+/* ===== Imágenes flotantes PNG ===== */
+const imgSources = ["GR.png", "bunny.png", "suki.png"]; // añade aquí todas las imágenes
+const maxImgs = 2; // cantidad total de imágenes por cada tipo
+
 const USUARIOS_PERMITIDOS = [
   "jmmunoz2k@gmail.com",
   "josemanu15cat@gmail.com"
 ];
-firebase.initializeApp(firebaseConfig);
 
+firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -21,8 +24,21 @@ function getDiaRef(mes, dia) {
     return db.collection("calendario").doc(`${mes}_${dia}`);
 }
 
+/* ===== Meses ===== */
+const diasEneroEspeciales = { 8:"#0066ff", 10:"#ff0000", 21:"#ffd700" };
+
+const meses = [
+    { id:"enero", nombre:"Enero", dias:31, primerDia:3, especiales:diasEneroEspeciales },
+    { id:"febrero", nombre:"Febrero", dias:28, primerDia:6, especiales:{} }
+];
+
+let mesIndex = 0;
+
+/* ===== Login ===== */
 const btnLogin = document.getElementById("loginGoogle");
 const btnLogout = document.getElementById("logout");
+const app = document.getElementById("app");
+const leyenda = document.getElementById("leyenda");
 
 btnLogin.onclick = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -31,16 +47,12 @@ btnLogin.onclick = () => {
 
 btnLogout.onclick = () => auth.signOut();
 
-const app = document.getElementById("app");
-
-auth.onAuthStateChanged(user => {
-    const leyenda = document.getElementById("leyenda"); // obtenemos la leyenda
-
+auth.onAuthStateChanged(async user => {
     if (!user) {
         btnLogin.style.display = "inline-block";
         btnLogout.style.display = "none";
         app.style.display = "none";
-        if (leyenda) leyenda.style.display = "none"; // ocultamos leyenda
+        leyenda.style.display = "none";
         return;
     }
 
@@ -53,180 +65,81 @@ auth.onAuthStateChanged(user => {
     btnLogin.style.display = "none";
     btnLogout.style.display = "inline-block";
     app.style.display = "block";
-    if (leyenda) leyenda.style.display = "block"; // mostramos leyenda
+    leyenda.style.display = "block";
 
+    await mostrarMes();
 });
 
-const fondo = document.getElementById("fondo");
+/* ===== Calendario ===== */
+async function generarCalendario(mes) {
+    const tbody = document.getElementById(mes.id);
+    let html = "<tr>";
 
-/* ===== Corazones SVG flotantes ===== */
-if (fondo) {
-    for (let i = 0; i < 25; i++) {
-        const svgNS = "http://www.w3.org/2000/svg";
-        const heart = document.createElementNS(svgNS, "svg");
-        heart.setAttribute("viewBox", "0 0 32 29.6");
-        heart.classList.add("corazon");
+    for (let i = 0; i < mes.primerDia; i++) html += "<td></td>";
 
-        const size = Math.random() * 20 + 25;
-        heart.style.width = size + "px";
-        heart.style.height = size + "px";
-        heart.style.left = Math.random() * window.innerWidth + "px";
-        heart.style.animationDuration = (Math.random() * 10 + 10) + "s";
+    for (let dia = 1; dia <= mes.dias; dia++) {
+        const doc = await getDiaRef(mes.id, dia).get();
+        const data = doc.exists ? doc.data() : {};
 
-        const path = document.createElementNS(svgNS, "path");
-        path.setAttribute(
-            "d",
-            "M23.6,0C20.4,0,17.7,1.8,16,4.4C14.3,1.8,11.6,0,8.4,0C3.7,0,0,3.7,0,8.4C0,14.6,16,29.6,16,29.6S32,14.6,32,8.4C32,3.7,28.3,0,23.6,0Z"
-        );
-        path.setAttribute("fill", "#ff5f8a");
+        html += `<td>
+            <div class="dia" onclick="abrirPopup('${mes.id}', ${dia})">
+                ${mes.especiales[dia] ? `<span class="corazon-dia" style="color:${mes.especiales[dia]};opacity:.35">❤</span>` : ""}
+                ${data.corazonMorado ? `<span class="corazon-dia" style="color:#8000ff">❤</span>` : ""}
+                <span class="numero-dia">${dia}</span>
+                ${data.nota ? `<span class="nota-icono">💬</span>` : ""}
+            </div>
+        </td>`;
 
-        heart.appendChild(path);
-        fondo.appendChild(heart);
+        if ((dia + mes.primerDia) % 7 === 0) html += "</tr><tr>";
     }
+
+    tbody.innerHTML = html + "</tr>";
 }
 
-/* ===== Imágenes flotantes PNG ===== */
-const imgSources = ["GR.png", "bunny.png", "suki.png"]; // añade aquí todas las imágenes
-const maxImgs = 2; // cantidad total de imágenes por cada tipo
+async function mostrarMes() {
+    document.querySelectorAll(".mes").forEach(m => m.style.display = "none");
+    const mes = meses[mesIndex];
+    document.querySelector(`[data-mes="${mes.id}"]`).style.display = "block";
+    document.getElementById("mesActual").textContent = mes.nombre;
+    await generarCalendario(mes);
+}
 
-imgSources.forEach(src => {
-    for (let i = 0; i < maxImgs; i++) {
-        const img = document.createElement("img");
-        img.src = src;
-        img.classList.add("floating-img");
+/* ===== Navegación ===== */
+document.getElementById("prevMes").onclick = () => {
+    mesIndex = (mesIndex - 1 + meses.length) % meses.length;
+    mostrarMes();
+};
 
-        img.style.left = Math.random() * window.innerWidth + "px";
-        img.style.top = Math.random() * window.innerHeight + "px";
-
-        const size = Math.random() * 30 + 40;
-        img.style.width = size + "px";
-        img.style.height = "auto";
-
-        img.style.animationDuration = (Math.random() * 5 + 8) + "s";
-        img.style.animationDelay = (Math.random() * 5) + "s";
-
-        fondo.appendChild(img);
-    }
-});
-
-/* ===== Días especiales ===== */
-const diasEneroEspeciales = {
-    8: "#0066ff",
-    10: "#ff0000",
-    21: "#ffd700"
+document.getElementById("nextMes").onclick = () => {
+    mesIndex = (mesIndex + 1) % meses.length;
+    mostrarMes();
 };
 
 /* ===== Popup ===== */
 const popup = document.getElementById("popupNota");
 const textoNota = document.getElementById("textoNota");
-const btnGuardar = document.getElementById("guardarNota");
-const btnCerrar = document.getElementById("cerrarPopup");
+const checkVisto = document.getElementById("checkVisto");
+
 let diaActual = null;
 
 async function abrirPopup(mes, dia) {
     diaActual = { mes, dia };
+    const doc = await getDiaRef(mes, dia).get();
+    const data = doc.exists ? doc.data() : {};
 
-    const ref = getDiaRef(mes, dia);
-    const doc = await ref.get();
-
-    textoNota.value = doc.exists && doc.data().nota
-        ? doc.data().nota
-        : "";
-
+    textoNota.value = data.nota || "";
+    checkVisto.checked = data.corazonMorado === true;
     popup.style.display = "flex";
 }
 
-btnCerrar.onclick = () => popup.style.display = "none";
+document.getElementById("cerrarPopup").onclick = () => popup.style.display = "none";
 
-btnGuardar.onclick = async () => {
-    const ref = getDiaRef(diaActual.mes, diaActual.dia);
-    const texto = textoNota.value.trim();
-
-    if (texto === "") {
-        await ref.set({ nota: firebase.firestore.FieldValue.delete() }, { merge: true });
-    } else {
-        await ref.set({ nota: texto }, { merge: true });
-    }
+document.getElementById("guardarNota").onclick = async () => {
+    await getDiaRef(diaActual.mes, diaActual.dia).set({
+        nota: textoNota.value.trim() || firebase.firestore.FieldValue.delete(),
+        corazonMorado: checkVisto.checked
+    }, { merge: true });
 
     popup.style.display = "none";
-    generarCalendarios();
+    mostrarMes();
 };
-
-/* ===== Corazón morado dinámico ===== */
-async function tieneCorazonMorado(mes, dia) {
-    const doc = await getDiaRef(mes, dia).get();
-    return doc.exists && doc.data().corazonMorado === true;
-}
-
-async function toggleCorazonMorado(mes, dia) {
-    const ref = getDiaRef(mes, dia);
-    const doc = await ref.get();
-
-    const activo = doc.exists && doc.data().corazonMorado === true;
-
-    await ref.set(
-        { corazonMorado: !activo },
-        { merge: true }
-    );
-
-    generarCalendarios();
-}
-
-function toggleCorazonMorado(mes, dia) {
-    const clave = `${mes}_corazon_${dia}`;
-    if (localStorage.getItem(clave)) localStorage.removeItem(clave);
-    else localStorage.setItem(clave, "true");
-    generarCalendarios();
-}
-
-/* ===== Calendario ===== */
-async function generarCalendario(id, diasMes, primerDia, diasEspeciales = {}) {
-    const tbody = document.getElementById(id);
-    let html = "<tr>";
-
-    for (let i = 0; i < primerDia; i++) html += "<td></td>";
-
-    for (let dia = 1; dia <= diasMes; dia++) {
-        const doc = await getDiaRef(id, dia).get();
-        const data = doc.exists ? doc.data() : {};
-
-        const nota = data.nota;
-        const corazonMorado = data.corazonMorado;
-        const colorEspecial = diasEspeciales[dia];
-
-        let contenido = `
-        <div class="dia"
-            onclick="abrirPopup('${id}', ${dia})"
-            oncontextmenu="event.preventDefault(); toggleCorazonMorado('${id}', ${dia});">
-        `;
-
-        if (colorEspecial) {
-            contenido += `<span class="corazon-dia" style="color:${colorEspecial};opacity:0.35">❤</span>`;
-        }
-
-        if (corazonMorado) {
-            contenido += `<span class="corazon-dia" style="color:#8000ff">❤</span>`;
-        }
-
-        contenido += `<span class="numero-dia">${dia}</span>`;
-
-        if (nota) contenido += `<span class="nota-icono">💬</span>`;
-
-        contenido += "</div>";
-
-        html += `<td>${contenido}</td>`;
-
-        if ((dia + primerDia) % 7 === 0) html += "</tr><tr>";
-    }
-
-    html += "</tr>";
-    tbody.innerHTML = html;
-}
-
-
-async function generarCalendarios() {
-    await generarCalendario("enero", 31, 3, diasEneroEspeciales);
-    await generarCalendario("febrero", 28, 6);
-}
-
-generarCalendarios();

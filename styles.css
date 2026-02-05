@@ -169,3 +169,32 @@ td {
 .login-btn {
     margin-top: 40px;
 }
+.paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    color: #e6004c;
+}
+
+.paginacion button {
+    border: none;
+    background: #ff2f6d;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.mes {
+    display: none;
+}
+
+.check-corazon {
+    display: block;
+    margin: 10px 0;
+    color: #8000ff;
+    font-weight: bold;
+}
